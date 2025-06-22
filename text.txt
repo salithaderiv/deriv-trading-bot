@@ -1,0 +1,30 @@
+git remote add origin https://github.com/salithaderiv/deriv-trading-bot.git
+git branch -M main
+git push -u origin main
+
+
+  git config --global user.email "salithaderiv@gmail.com"
+  git config --global user.name "salithaderiv"
+
+
+streamlit run app.py
+
+
+
+git remote -v  # to see remotes
+
+git remote set-url origin https://github.com/salithaderiv/deriv-trading-bot.git  # update remote if needed
+
+git branch -M main  # rename current branch to main
+
+git add .          # stage files
+
+git commit -m "Initial commit"  # commit files
+
+git push -u origin main  # push to remote main branch
+
+
+0BMV2wYglwmIirO
+
+Redirect URL
+Verification URL (optional)

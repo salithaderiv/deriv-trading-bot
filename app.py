@@ -2,36 +2,33 @@ import streamlit as st
 import asyncio
 from deriv_api import DerivAPI
 
-# UI Configuration
+# Page setup
 st.set_page_config(page_title="Deriv Trading Bot", layout="centered")
 st.title("📊 Deriv Trading Bot")
 
-# Input field for API token
+# User input
 token = st.text_input("🔑 Enter API Token", type="password")
 
-# Initialize the API
-api = DerivAPI(app_id=1089)  # You can use your own app_id here
-
-# Async helpers
-async def authorize(token):
-    return await api.authorize({'authorize': token})
-
-async def get_balance():
-    res = await api.balance()
-    return res['balance']['balance']
-
-# Run when button is clicked
+# Only run API code when button is clicked
 if token and st.button("Authorize"):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
     try:
-        loop.run_until_complete(authorize(token))
-        st.success("✅ Authorized Successfully")
+        # Set up a new asyncio loop (required by DerivAPI)
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
 
-        balance = loop.run_until_complete(get_balance())
-        st.info(f"💰 Current Balance: ${balance:.2f}")
+        # Initialize API inside the event loop
+        api = DerivAPI(app_id=1089)  # demo app_id
+
+        # Async functions inside the event loop
+        async def main():
+            await api.authorize({'authorize': token})
+            balance = await api.balance()
+            return balance['balance']['balance']
+
+        # Run the async tasks
+        balance = loop.run_until_complete(main())
+        st.success("✅ Authorized Successfully")
+        st.info(f"💰 Balance: ${balance:.2f}")
 
     except Exception as e:
         st.error(f"❌ Error: {str(e)}")
-
